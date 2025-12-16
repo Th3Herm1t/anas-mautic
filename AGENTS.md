@@ -10,7 +10,7 @@ Mautic is an open-source marketing automation platform built on **Symfony 7.4** 
 
 ### Development Setup
 ```bash
-# DDEV-based setup (recommended) - auto-installs and configures everything
+# DDEV-based setup - auto-installs and configures everything
 ddev start
 
 # Manual setup
