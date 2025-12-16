@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MauticPlugin\MauticAnasBusinessBundle\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -11,15 +12,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Process\Process;
 
+#[AsCommand(
+    name: 'mautic:business:sync',
+    description: 'Synchronizes AnasArabic Business Logic (Segments, Emails, Campaigns) via Fixtures.'
+)]
 class SyncBusinessLogicCommand extends Command
 {
-    protected static $defaultName = 'mautic:business:sync';
-
     protected function configure(): void
     {
-        $this->setName('mautic:business:sync')
-            ->setDescription('Synchronizes AnasArabic Business Logic (Segments, Emails, Campaigns) via Fixtures.')
-            ->addOption('purge', null, InputOption::VALUE_NONE, 'Purge existing business data before loading (Caution!)');
+        $this->addOption('purge', null, InputOption::VALUE_NONE, 'Purge existing business data before loading (Caution!)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
