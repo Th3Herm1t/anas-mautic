@@ -1,0 +1,12 @@
+{
+    "name": "anasarabic/mautic-business-bundle",
+    "type": "mautic-plugin",
+    "description": "Custom Business Logic for AnasArabic.com",
+    "version": "1.0.0",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "MauticPlugin\\MauticAnasBusinessBundle\\": ""
+        }
+    }
+}
