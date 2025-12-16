@@ -16,8 +16,11 @@ services:
       # Mount custom plugins and themes directly into the container
       - ./plugins/MauticAnasBusinessBundle:/var/www/html/plugins/MauticAnasBusinessBundle
       - ./themes/anas_arabic:/var/www/html/themes/anas_arabic
-    ports:
-      - "8080:80"
+    # Coolify handles routing via Traefik. Do not bind ports to host.
+    # ports:
+    #   - "8080:80"
+    expose:
+      - "80"
     depends_on:
       - db
 
