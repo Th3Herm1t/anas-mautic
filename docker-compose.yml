@@ -2,7 +2,8 @@ version: '3.9'
 
 services:
   mautic:
-    image: mautic/mautic:5-apache
+    # Build from local Dockerfile instead of using upstream image
+    build: .
     restart: always
     environment:
       - MAUTIC_DB_HOST=db
@@ -15,12 +16,12 @@ services:
       - MAUTIC_TRUSTED_PROXIES=["0.0.0.0/0"]
     volumes:
       - mautic_data:/var/www/html
-      # Mount custom plugins and themes directly into the container
-      - ./plugins/MauticAnasBusinessBundle:/var/www/html/plugins/MauticAnasBusinessBundle
-      - ./themes/anas_arabic:/var/www/html/themes/anas_arabic
-    # Coolify handles routing via Traefik. Do not bind ports to host.
-    # ports:
-    #   - "8080:80"
+      # Plugins are now burnt into the image via Dockerfile
+      # - ./plugins/MauticAnasBusinessBundle:/var/www/html/plugins/MauticAnasBusinessBundle
+      # - ./themes/anas_arabic:/var/www/html/themes/anas_arabic
+      # Coolify handles routing via Traefik. Do not bind ports to host.
+      # ports:
+      #   - "8080:80"
     expose:
       - "80"
     depends_on:
