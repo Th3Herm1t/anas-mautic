@@ -6,11 +6,11 @@ namespace MauticPlugin\MauticAnasBusinessBundle\Command;
 
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Process\Process;
 
 #[AsCommand(
     name: 'mautic:business:sync',
@@ -28,27 +28,30 @@ class SyncBusinessLogicCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->title('AnasArabic Business Logic Sync');
 
-        $projectDir = realpath(__DIR__ . '/../../../../'); // Root of Mautic (above docroot)
-        $consolePath = $projectDir . '/bin/console';
+        $application = $this->getApplication();
+        if (null === $application) {
+            throw new \RuntimeException('Could not get Application instance');
+        }
 
-        // 1. Install Plugin (ensure it's tracked)
-        $io->section('1. refreshing Plugins...');
-        $this->runSubCommand([$consolePath, 'mautic:plugins:reload'], $io);
+        // 1. Refresh Plugins
+        $io->section('1. Refreshing Plugins...');
+        $reloadInput = new ArrayInput(['command' => 'mautic:plugins:reload']);
+        $application->doRun($reloadInput, $output);
 
         // 2. Load Fixtures
         $io->section('2. Loading Business Fixtures...');
-        $args = [
-            $consolePath,
-            'doctrine:fixtures:load',
-            '--group=anas_business',
-            '--no-interaction'
+        $fixturesArgs = [
+            'command' => 'doctrine:fixtures:load',
+            '--group' => 'anas_business',
+            '--no-interaction' => true,
         ];
 
         if (!$input->getOption('purge')) {
-            $args[] = '--append';
+            $fixturesArgs['--append'] = true;
         }
 
-        $this->runSubCommand($args, $io);
+        $fixturesInput = new ArrayInput($fixturesArgs);
+        $application->doRun($fixturesInput, $output);
 
         $io->success('Business Logic Synchronized Successfully!');
         $io->text([
@@ -57,19 +60,7 @@ class SyncBusinessLogicCommand extends Command
             'Campaigns Created: Signup, Trial, Recovery logic',
         ]);
 
-        return 0;
-    }
-
-    private function runSubCommand(array $cmd, SymfonyStyle $io): void
-    {
-        $process = new Process($cmd);
-        $process->setTimeout(300);
-        $process->run(function ($type, $buffer) use ($io) {
-            $io->write($buffer, false, OutputInterface::OUTPUT_RAW);
-        });
-
-        if (!$process->isSuccessful()) {
-            throw new \RuntimeException($process->getErrorOutput());
-        }
+        return Command::SUCCESS;
     }
 }
+
