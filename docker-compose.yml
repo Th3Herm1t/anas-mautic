@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  mautic:
+    image: mautic/mautic:5-apache
+    restart: always
+    environment:
+      - MAUTIC_DB_HOST=db
+      - MAUTIC_DB_USER=mautic
+      - MAUTIC_DB_PASSWORD=${DB_PASSWORD:-mautic}
+      - MAUTIC_DB_NAME=mautic
+      - MAUTIC_RUN_CRON_JOBS=true
+      - MAUTIC_TRUSTED_PROXIES=["0.0.0.0/0"]
+    volumes:
+      - mautic_data:/var/www/html
+      # Mount custom plugins and themes directly into the container
+      - ./plugins/MauticAnasBusinessBundle:/var/www/html/plugins/MauticAnasBusinessBundle
+      - ./themes/anas_arabic:/var/www/html/themes/anas_arabic
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-root}
+      - MYSQL_DATABASE=mautic
+      - MYSQL_USER=mautic
+      - MYSQL_PASSWORD=${DB_PASSWORD:-mautic}
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  mautic_data:
+  db_data:
