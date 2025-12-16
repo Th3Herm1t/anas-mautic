@@ -12,12 +12,6 @@ return [
     ],
     'menu' => [],
     'services' => [
-        'command' => [
-            'mautic.anas_business.command.sync' => [
-                'class' => \MauticPlugin\MauticAnasBusinessBundle\Command\SyncBusinessLogicCommand::class,
-                'tag' => 'console.command',
-            ],
-        ],
         'events' => [],
         'forms' => [],
         'helpers' => [],
