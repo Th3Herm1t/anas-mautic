@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace MauticPlugin\MauticAnasBusinessBundle;
 
-use Mautic\IntegrationsBundle\Bundle\AbstractPluginBundle;
+use Mautic\PluginBundle\Bundle\PluginBundleBase;
 
-class MauticAnasBusinessBundle extends AbstractPluginBundle
+class MauticAnasBusinessBundle extends PluginBundleBase
 {
 }
