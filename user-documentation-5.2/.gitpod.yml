@@ -1,0 +1,14 @@
+image: 
+  file: .gitpod.Dockerfile
+
+tasks:
+  - before: pip install -r docs/requirements.txt
+    command: gp open .vscode/welcome.md
+
+vscode:
+  extensions:
+    - ms-python.python
+    - lextudio.restructuredtext@190.1.4 # See https://github.com/mautic/user-documentation/pull/334#issuecomment-2405922370 before upgrading.
+    - trond-snekvik.simple-rst
+    - errata-ai.vale-server
+    - eamodio.gitlens

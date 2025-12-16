@@ -1,0 +1,13 @@
+{
+    "name": "Anas Arabic",
+    "author": "AnasArabic Team",
+    "authorUrl": "https://anasarabic.com",
+    "features": [
+        "email",
+        "page",
+        "form"
+    ],
+    "builder": [
+        "grapesjsbuilder"
+    ]
+}
