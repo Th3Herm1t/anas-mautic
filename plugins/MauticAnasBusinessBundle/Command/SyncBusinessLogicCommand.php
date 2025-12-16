@@ -42,7 +42,7 @@ class SyncBusinessLogicCommand extends Command
         $io->section('2. Loading Business Fixtures...');
         $fixturesArgs = [
             'command' => 'doctrine:fixtures:load',
-            '--group' => 'anas_business',
+            '--group' => ['anas_business'],
             '--no-interaction' => true,
         ];
 

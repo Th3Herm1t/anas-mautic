@@ -5,16 +5,22 @@ declare(strict_types=1);
 namespace MauticPlugin\MauticAnasBusinessBundle\DataFixtures\ORM;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Mautic\LeadBundle\Entity\LeadList;
 use Mautic\LeadBundle\Model\ListModel;
 
-class LoadSegmentData extends Fixture implements OrderedFixtureInterface
+class LoadSegmentData extends Fixture implements OrderedFixtureInterface, FixtureGroupInterface
 {
     public function __construct(
         private ListModel $segmentModel
     ) {
+    }
+
+    public static function getGroups(): array
+    {
+        return ['anas_business'];
     }
 
     public function load(ObjectManager $manager): void

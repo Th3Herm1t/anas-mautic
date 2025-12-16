@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MauticPlugin\MauticAnasBusinessBundle\DataFixtures\ORM;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Mautic\CampaignBundle\Entity\Campaign;
@@ -12,8 +13,13 @@ use Mautic\CampaignBundle\Entity\Event;
 use Mautic\EmailBundle\Entity\Email;
 use Mautic\LeadBundle\Entity\LeadList;
 
-class LoadCampaignData extends Fixture implements OrderedFixtureInterface
+class LoadCampaignData extends Fixture implements OrderedFixtureInterface, FixtureGroupInterface
 {
+    public static function getGroups(): array
+    {
+        return ['anas_business'];
+    }
+
     public function load(ObjectManager $manager): void
     {
         // 1. Signup Incomplete Campaign

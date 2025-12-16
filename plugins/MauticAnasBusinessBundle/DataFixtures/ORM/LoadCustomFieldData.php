@@ -5,12 +5,18 @@ declare(strict_types=1);
 namespace MauticPlugin\MauticAnasBusinessBundle\DataFixtures\ORM;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Mautic\LeadBundle\Entity\LeadField;
 
-class LoadCustomFieldData extends Fixture implements OrderedFixtureInterface
+class LoadCustomFieldData extends Fixture implements OrderedFixtureInterface, FixtureGroupInterface
 {
+    public static function getGroups(): array
+    {
+        return ['anas_business'];
+    }
+
     public function load(ObjectManager $manager): void
     {
         $fields = [
