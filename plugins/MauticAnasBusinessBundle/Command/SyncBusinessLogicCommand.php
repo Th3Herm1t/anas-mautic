@@ -28,7 +28,7 @@ class SyncBusinessLogicCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->title('AnasArabic Business Logic Sync');
 
-        $projectDir = realpath(__DIR__ . '/../../../'); // Root of Mautic
+        $projectDir = realpath(__DIR__ . '/../../../../'); // Root of Mautic (above docroot)
         $consolePath = $projectDir . '/bin/console';
 
         // 1. Install Plugin (ensure it's tracked)
