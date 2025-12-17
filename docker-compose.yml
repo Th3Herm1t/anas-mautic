@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   mautic:
-    # Build from local Dockerfile instead of using upstream image
+    # Build from local Dockerfile
     build: .
     restart: always
     environment:
@@ -15,17 +15,23 @@ services:
       - MAUTIC_RUN_CRON_JOBS=true
       - MAUTIC_TRUSTED_PROXIES=["0.0.0.0/0"]
     volumes:
-      - mautic_data:/var/www/html
-      # Plugins are now burnt into the image via Dockerfile
-      # - ./plugins/MauticAnasBusinessBundle:/var/www/html/plugins/MauticAnasBusinessBundle
-      # - ./themes/anas_arabic:/var/www/html/themes/anas_arabic
-      # Coolify handles routing via Traefik. Do not bind ports to host.
-      # ports:
-      #   - "8080:80"
+      # NEW STRATEGY: Only persist specific directories, not entire app
+      # This allows code updates from new images to take effect
+      - mautic_config:/var/www/html/docroot/config # DB credentials, settings
+      - mautic_var:/var/www/html/var # Cache, logs, sessions
+      - mautic_media:/var/www/html/docroot/media # Uploaded assets
+      # NOTE: plugins/ and themes/ are synced from image by entrypoint
     expose:
       - "80"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
   db:
     image: mysql:8.0
@@ -38,7 +44,16 @@ services:
       - MYSQL_PASSWORD=${DB_PASSWORD:-mautic}
     volumes:
       - db_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
-  mautic_data:
+  mautic_config:
+  mautic_var:
+  mautic_media:
   db_data:
+
+

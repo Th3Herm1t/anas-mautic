@@ -25,9 +25,9 @@ class LoadCampaignData extends Fixture implements OrderedFixtureInterface, Fixtu
         // 1. Signup Incomplete Campaign
         $signupSegment = $manager->getRepository(LeadList::class)->findOneBy(['alias' => 'signup_incomplete']);
         // Email D (24h), E (72h), F (120h)
-        $emailD = $manager->getRepository(Email::class)->findOneBy(['alias' => 'email_d_activation_24h']);
-        $emailE = $manager->getRepository(Email::class)->findOneBy(['alias' => 'email_e_activation_72h']);
-        $emailF = $manager->getRepository(Email::class)->findOneBy(['alias' => 'email_f_activation_120h']);
+        $emailD = $manager->getRepository(Email::class)->findOneBy(['name' => 'Email D - Activation 24h']);
+        $emailE = $manager->getRepository(Email::class)->findOneBy(['name' => 'Email E - Activation 72h']);
+        $emailF = $manager->getRepository(Email::class)->findOneBy(['name' => 'Email F - Activation 120h']);
 
         if ($signupSegment && $emailD && $emailE) { // Allow partial load
             $campaign = $this->createCampaign($manager, 'Scenario 1: Signup Incomplete', 'signup_incomplete_flow');
@@ -49,9 +49,9 @@ class LoadCampaignData extends Fixture implements OrderedFixtureInterface, Fixtu
 
         // 2. Trial Active Campaign
         $trialSegment = $manager->getRepository(LeadList::class)->findOneBy(['alias' => 'trial_active']);
-        $emailA = $manager->getRepository(Email::class)->findOneBy(['alias' => 'email_a_trial_day_7']);
-        $emailB = $manager->getRepository(Email::class)->findOneBy(['alias' => 'email_b_trial_day_12']);
-        $emailC = $manager->getRepository(Email::class)->findOneBy(['alias' => 'email_c_trial_day_14']);
+        $emailA = $manager->getRepository(Email::class)->findOneBy(['name' => 'Email A - Trial Day 7']);
+        $emailB = $manager->getRepository(Email::class)->findOneBy(['name' => 'Email B - Trial Day 12']);
+        $emailC = $manager->getRepository(Email::class)->findOneBy(['name' => 'Email C - Trial Day 14']);
 
         if ($trialSegment && $emailA && $emailB) {
             $campaign = $this->createCampaign($manager, 'Scenario 2: Trial Active Flow', 'trial_active_flow');
@@ -73,8 +73,8 @@ class LoadCampaignData extends Fixture implements OrderedFixtureInterface, Fixtu
 
         // 3. Recovery Campaign
         $recoverySegment = $manager->getRepository(LeadList::class)->findOneBy(['alias' => 'trial_expired_unconverted']);
-        $emailG = $manager->getRepository(Email::class)->findOneBy(['alias' => 'email_g_recovery_discount']);
-        $emailH = $manager->getRepository(Email::class)->findOneBy(['alias' => 'email_h_discount_expiry']);
+        $emailG = $manager->getRepository(Email::class)->findOneBy(['name' => 'Email G - Recovery Discount']);
+        $emailH = $manager->getRepository(Email::class)->findOneBy(['name' => 'Email H - Discount Expiry']);
 
         if ($recoverySegment && $emailG && $emailH) {
             $campaign = $this->createCampaign($manager, 'Scenario 3: Recovery Flow', 'recovery_flow');

@@ -1,15 +1,31 @@
 FROM mautic/mautic:5-apache
 
-# 1. Copy Custom Plugin (Burns code into image)
-# NOTE: Mautic 5 Docker image uses docroot/ subdirectory structure
-COPY plugins/MauticAnasBusinessBundle /var/www/html/docroot/plugins/MauticAnasBusinessBundle
+# =============================================================================
+# AnasArabic Custom Mautic Image
+# 
+# Strategy: Store custom code in /opt/mautic-custom/ (staging directory)
+# The entrypoint script syncs this to the volume on every container start,
+# ensuring code updates are applied without re-installing Mautic.
+# =============================================================================
 
-# 2. Copy Custom Theme
-COPY themes/anas_arabic /var/www/html/docroot/themes/anas_arabic
+# Install rsync for file syncing
+RUN apt-get update && apt-get install -y rsync && rm -rf /var/lib/apt/lists/*
 
-# 3. Fix Permissions (Crucial for "Permission denied" errors)
-# Mautic runs as www-data (ID 33)
-RUN chown -R www-data:www-data /var/www/html/docroot/plugins/MauticAnasBusinessBundle \
-    && chown -R www-data:www-data /var/www/html/docroot/themes/anas_arabic \
-    && chown -R www-data:www-data /var/www/html/var
+# Create staging directory for custom code
+RUN mkdir -p /opt/mautic-custom/plugins /opt/mautic-custom/themes
 
+# Copy custom plugin to staging directory
+COPY plugins/MauticAnasBusinessBundle /opt/mautic-custom/plugins/MauticAnasBusinessBundle
+
+# Copy custom theme to staging directory
+COPY themes/anas_arabic /opt/mautic-custom/themes/anas_arabic
+
+# Copy entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/mautic-entrypoint.sh
+RUN chmod +x /usr/local/bin/mautic-entrypoint.sh
+
+# Set the custom entrypoint (chains to original)
+ENTRYPOINT ["/usr/local/bin/mautic-entrypoint.sh"]
+
+# Default command (Apache)
+CMD ["apache2-foreground"]
